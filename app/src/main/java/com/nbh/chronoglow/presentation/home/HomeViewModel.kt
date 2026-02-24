@@ -2,6 +2,7 @@ package com.nbh.chronoglow.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nbh.chronoglow.domain.model.SessionMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -49,16 +50,14 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
         timerJob?.cancel()
     }
-}
 
-data class HomeUiState(
-    val isRunning: Boolean = false,
-    val currentTime: Long = 0L,
-    val totalTime: Long = 1500L
-) {
-    val progress: Float
-        get() = currentTime / totalTime.toFloat()
-
-    val runningNotFinished: Boolean =
-        isRunning && currentTime < totalTime
+    fun changeSession(mode: SessionMode) {
+        uiState.update {
+            it.copy(
+                sessionMode = mode,
+                currentTime = 0L,
+                isRunning = false
+            )
+        }
+    }
 }
