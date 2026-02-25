@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,15 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.nbh.chronoglow.presentation.home.HomeViewModel
 
 @Composable
-fun ControlButtons(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) {
-    val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
-
+fun ControlButtons(modifier: Modifier = Modifier, isRunning: Boolean, onStart: () -> Unit, onPause: () -> Unit, onReset: () -> Unit) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Black),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,12 +31,12 @@ fun ControlButtons(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) 
             modifier = Modifier
                 .width(250.dp)
                 .padding(16.dp),
-            onClick = { if (uiState.isRunning) homeViewModel.startTimer() else homeViewModel.pauseTimer() },
+            onClick = { if (isRunning) onStart() else onPause() },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B81F4))
         ) {
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = if (uiState.isRunning) "Start" else "Pause",
+                text = if (isRunning) "Start" else "Pause",
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal
@@ -49,7 +44,7 @@ fun ControlButtons(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) 
 
         }
         Button(
-            onClick = { homeViewModel.resetTimer() },
+            onClick = { onReset() },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
         ) {
             Text(
@@ -66,5 +61,5 @@ fun ControlButtons(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) 
 @Preview(showSystemUi = true)
 @Composable
 fun ControlButtonsPreview() {
-    ControlButtons(homeViewModel = HomeViewModel())
+    ControlButtons(isRunning = false, onStart = {}, onPause =  {}, onReset = {})
 }
