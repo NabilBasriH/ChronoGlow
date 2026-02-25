@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -15,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nbh.chronoglow.presentation.home.HomeViewModel
 
 @Composable
-fun ProgressButtons(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) {
+fun ControlButtons(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
@@ -67,6 +65,6 @@ fun ProgressButtons(modifier: Modifier = Modifier, homeViewModel: HomeViewModel)
 
 @Preview(showSystemUi = true)
 @Composable
-fun ProgressButtonsPreview() {
-    ProgressButtons(homeViewModel = HomeViewModel())
+fun ControlButtonsPreview() {
+    ControlButtons(homeViewModel = HomeViewModel())
 }
