@@ -7,12 +7,15 @@ data class HomeUiState(
     val isRunning: Boolean = false,
     val currentTime: Long = 0L
 ) {
+    val totalTime: Long
+        get() = sessionMode.duration
+
     val progress: Float
         get() = currentTime / totalTime.toFloat()
 
+    val remainingTime: Long
+        get() = totalTime - currentTime
+
     val runningNotFinished: Boolean =
         isRunning && currentTime < totalTime
-
-    val totalTime: Long
-        get() = sessionMode.duration
 }
