@@ -6,5 +6,5 @@ import androidx.compose.ui.text.font.FontWeight
 import com.nbh.chronoglow.R
 
 val Roboto = FontFamily(
-    Font(R.font.roboto_regular, FontWeight.Normal),
+    //Font(R.font.roboto_regular, FontWeight.Normal),
 )
