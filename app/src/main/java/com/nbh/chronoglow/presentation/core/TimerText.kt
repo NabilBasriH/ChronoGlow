@@ -1,11 +1,11 @@
 package com.nbh.chronoglow.presentation.core
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.nbh.chronoglow.presentation.utils.formatTime
 
@@ -17,7 +17,8 @@ fun TimerText(modifier: Modifier = Modifier, remainingTime: Long) {
     ) {
         Text(
             text = formatTime(remainingTime),
-            color = Color.White
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }

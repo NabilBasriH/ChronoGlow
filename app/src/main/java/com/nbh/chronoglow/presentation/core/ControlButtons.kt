@@ -1,29 +1,26 @@
 package com.nbh.chronoglow.presentation.core
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.nbh.chronoglow.R
 
 @Composable
 fun ControlButtons(modifier: Modifier = Modifier, isRunning: Boolean, onStart: () -> Unit, onPause: () -> Unit, onReset: () -> Unit) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -32,14 +29,13 @@ fun ControlButtons(modifier: Modifier = Modifier, isRunning: Boolean, onStart: (
                 .width(250.dp)
                 .padding(16.dp),
             onClick = { if (isRunning) onStart() else onPause() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B81F4))
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = if (isRunning) "Start" else "Pause",
-                fontSize = 16.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal
+                text = if (isRunning) stringResource(R.string.start) else stringResource(R.string.pause),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.surface
             )
 
         }
@@ -49,10 +45,9 @@ fun ControlButtons(modifier: Modifier = Modifier, isRunning: Boolean, onStart: (
         ) {
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = "Reset",
-                fontSize = 16.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal
+                text = stringResource(R.string.reset),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

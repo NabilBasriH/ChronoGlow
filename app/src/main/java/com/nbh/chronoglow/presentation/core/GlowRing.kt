@@ -11,10 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +25,7 @@ import com.nbh.chronoglow.ui.theme.ChronoGlowTheme
 fun GlowRing(
     modifier: Modifier = Modifier,
     progress: Float,
-    ringColor: Color = Color.Cyan,
+    ringColor: Color,
     ringThickness: Dp = 10.dp
 ) {
     val animatedProgress by animateFloatAsState(
@@ -70,12 +66,6 @@ fun GlowRing(
     }
 }
 
-@Composable
-fun TimerRing(modifier: Modifier = Modifier) {
-    var isRunning by remember { mutableStateOf(false) }
-    var progress by remember { mutableFloatStateOf(0f) }
-}
-
 @Preview(showSystemUi = true)
 @Composable
 private fun GlowRingPreview() {
@@ -87,7 +77,7 @@ private fun GlowRingPreview() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            GlowRing(progress = 0.5f, modifier = Modifier.size(200.dp))
+            GlowRing(progress = 0.5f, ringColor = Color(0xFF3B82F6), modifier = Modifier.size(200.dp))
         }
     }
 }
