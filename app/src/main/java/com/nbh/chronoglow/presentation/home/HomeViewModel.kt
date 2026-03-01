@@ -20,6 +20,8 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     private var timerJob: Job? = null
 
     fun startTimer() {
+        if (timerJob != null) return
+
         uiState.update {
             it.copy(isRunning = true)
         }
@@ -34,24 +36,29 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             uiState.update { state ->
                 state.copy(isRunning = false)
             }
+            timerJob = null
         }
     }
 
     fun pauseTimer() {
+        timerJob?.cancel()
+        timerJob = null
         uiState.update {
             it.copy(isRunning = false)
         }
-        timerJob?.cancel()
     }
 
     fun resetTimer() {
+        timerJob?.cancel()
+        timerJob = null
         uiState.update {
             it.copy(isRunning = false, currentTime = 0L)
         }
-        timerJob?.cancel()
     }
 
     fun changeSession(mode: SessionMode) {
+        timerJob?.cancel()
+        timerJob = null
         uiState.update {
             it.copy(
                 isRunning = false,
