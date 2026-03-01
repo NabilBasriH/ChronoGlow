@@ -18,10 +18,10 @@ val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = Inter,
         fontWeight = FontWeight.Light,
-        fontSize = 72.sp,
+        fontSize = 65.sp,
         lineHeight = 80.sp,
         letterSpacing = (-1).sp,
-        textAlign = TextAlign.Center
+        fontFeatureSettings = "tnum"
     ),
 
     // Title

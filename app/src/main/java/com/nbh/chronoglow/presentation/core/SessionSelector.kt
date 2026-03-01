@@ -29,7 +29,11 @@ import com.nbh.chronoglow.domain.model.SessionMode.SHORT_BREAK
 import com.nbh.chronoglow.ui.theme.ChronoGlowTheme
 
 @Composable
-fun SessionSelector(modifier: Modifier = Modifier, sessionMode: SessionMode) {
+fun SessionSelector(
+    modifier: Modifier = Modifier,
+    sessionMode: SessionMode,
+    changeSession: (SessionMode) -> Unit
+) {
     ElevatedCard(
         modifier = modifier.padding(16.dp),
         shape = RoundedCornerShape(50.dp),
@@ -46,7 +50,7 @@ fun SessionSelector(modifier: Modifier = Modifier, sessionMode: SessionMode) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                onClick = {},
+                onClick = { changeSession(FOCUS) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor =
                         if (sessionMode == FOCUS) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent
@@ -64,10 +68,10 @@ fun SessionSelector(modifier: Modifier = Modifier, sessionMode: SessionMode) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                onClick = {},
+                onClick = { changeSession(SHORT_BREAK) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor =
-                        if (sessionMode == SHORT_BREAK) Color.Gray else Color.Transparent
+                        if (sessionMode == SHORT_BREAK) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent
                 )
             ) {
                 Text(
@@ -82,10 +86,10 @@ fun SessionSelector(modifier: Modifier = Modifier, sessionMode: SessionMode) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                onClick = {},
+                onClick = { changeSession(LONG_BREAK) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor =
-                        if (sessionMode == LONG_BREAK) Color.Gray else Color.Transparent
+                        if (sessionMode == LONG_BREAK) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent
                 )
             ) {
                 Text(
@@ -104,6 +108,6 @@ fun SessionSelector(modifier: Modifier = Modifier, sessionMode: SessionMode) {
 @Composable
 private fun SessionSelectorPreview() {
     ChronoGlowTheme {
-        SessionSelector(sessionMode = FOCUS)
+        SessionSelector(sessionMode = FOCUS) {}
     }
 }

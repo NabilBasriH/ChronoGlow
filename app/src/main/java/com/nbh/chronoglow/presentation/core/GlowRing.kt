@@ -26,7 +26,7 @@ fun GlowRing(
     modifier: Modifier = Modifier,
     progress: Float,
     ringColor: Color,
-    ringThickness: Dp = 10.dp
+    ringThickness: Dp = 8.dp
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = progress,

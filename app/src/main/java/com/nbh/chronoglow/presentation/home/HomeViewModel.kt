@@ -54,9 +54,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     fun changeSession(mode: SessionMode) {
         uiState.update {
             it.copy(
-                sessionMode = mode,
+                isRunning = false,
                 currentTime = 0L,
-                isRunning = false
+                sessionMode = mode
             )
         }
     }
