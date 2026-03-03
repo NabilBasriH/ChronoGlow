@@ -19,13 +19,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nbh.chronoglow.R
+import com.nbh.chronoglow.domain.model.SessionMode
 import com.nbh.chronoglow.domain.model.SessionMode.FOCUS
 import com.nbh.chronoglow.ui.theme.ChronoGlowTheme
 
 @Composable
 fun ControlButtons(
     modifier: Modifier = Modifier,
-    sessionMode: Any,
+    sessionMode: SessionMode,
     isRunning: Boolean,
     onStart: () -> Unit,
     onPause: () -> Unit,
