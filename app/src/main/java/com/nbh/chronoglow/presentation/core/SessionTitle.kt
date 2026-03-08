@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.nbh.chronoglow.R
@@ -17,7 +19,9 @@ import com.nbh.chronoglow.domain.model.SessionMode.SHORT_BREAK
 @Composable
 fun SessionTitle(modifier: Modifier = Modifier, sessionMode: SessionMode) {
     Text(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics { heading() },
         text = when (sessionMode) {
             FOCUS -> stringResource(R.string.focus_session)
             SHORT_BREAK -> stringResource(R.string.short_break).uppercase()

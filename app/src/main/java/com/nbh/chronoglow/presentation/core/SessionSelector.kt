@@ -18,6 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,17 +44,23 @@ fun SessionSelector(
         shape = RoundedCornerShape(50.dp),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
+        val sessionSelector = stringResource(R.string.session_selector)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Max)
-                .padding(8.dp),
+                .padding(8.dp)
+                .semantics { contentDescription = sessionSelector },
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .semantics {
+                        role = Role.Tab
+                        selected = sessionMode == FOCUS
+                    },
                 onClick = { changeSession(FOCUS) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor =
@@ -67,7 +78,11 @@ fun SessionSelector(
             Button(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .semantics {
+                        role = Role.Tab
+                        selected = sessionMode == SHORT_BREAK
+                    },
                 onClick = { changeSession(SHORT_BREAK) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor =
@@ -85,7 +100,11 @@ fun SessionSelector(
             Button(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .semantics {
+                        role = Role.Tab
+                        selected = sessionMode == LONG_BREAK
+                    },
                 onClick = { changeSession(LONG_BREAK) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor =

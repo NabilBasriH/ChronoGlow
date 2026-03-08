@@ -5,3 +5,9 @@ fun formatTime(seconds: Long): String {
     val remainingSeconds = seconds % 60
     return "%02d:%02d".format(minutes, remainingSeconds)
 }
+
+fun getTimeParts(seconds: Long): Pair<Long, Long> {
+    val minutes = seconds / 60
+    val remainingSeconds = seconds % 60
+    return Pair(minutes, remainingSeconds)
+}

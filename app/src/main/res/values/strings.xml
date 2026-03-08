@@ -7,4 +7,9 @@
     <string name="pause">Pause</string>
     <string name="reset">Reset</string>
     <string name="focus">Focus</string>
+    <string name="timer_running">Timer running</string>
+    <string name="timer_paused">Timer paused</string>
+    <string name="reset_timer">Reset timer</string>
+    <string name="session_selector">Session selector</string>
+    <string name="time_remaining">%1$d minutes %2$d seconds remaining</string>
 </resources>

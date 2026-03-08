@@ -16,6 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -33,7 +36,14 @@ fun GlowRing(
         animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
     )
 
-    Canvas(modifier = modifier) {
+    Canvas(
+        modifier = modifier
+            .semantics {
+                progressBarRangeInfo = ProgressBarRangeInfo(
+                    current = progress,
+                    range = 0f..1f
+                )
+            }) {
         val radius = size.minDimension / 2
         val stroke = ringThickness.toPx()
 
@@ -77,7 +87,11 @@ private fun GlowRingPreview() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            GlowRing(progress = 0.5f, ringColor = Color(0xFF3B82F6), modifier = Modifier.size(200.dp))
+            GlowRing(
+                progress = 0.5f,
+                ringColor = Color(0xFF3B82F6),
+                modifier = Modifier.size(200.dp)
+            )
         }
     }
 }
