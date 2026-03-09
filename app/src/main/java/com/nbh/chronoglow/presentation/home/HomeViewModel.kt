@@ -3,6 +3,8 @@ package com.nbh.chronoglow.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nbh.chronoglow.domain.model.SessionMode
+import com.nbh.chronoglow.presentation.utils.CrashlyticsHelper
+import com.nbh.chronoglow.presentation.utils.TimerAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -26,6 +28,13 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             it.copy(isRunning = true)
         }
 
+        CrashlyticsHelper.logTimerAction(
+            action = TimerAction.START,
+            sessionMode = uiState.value.sessionMode,
+            isRunning = uiState.value.isRunning,
+            remainingTime = uiState.value.remainingTime
+        )
+
         timerJob = viewModelScope.launch {
             while (uiState.value.runningNotFinished) {
                 delay(1000)
@@ -46,6 +55,13 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         uiState.update {
             it.copy(isRunning = false)
         }
+
+        CrashlyticsHelper.logTimerAction(
+            action = TimerAction.PAUSE,
+            sessionMode = uiState.value.sessionMode,
+            isRunning = uiState.value.isRunning,
+            remainingTime = uiState.value.remainingTime
+        )
     }
 
     fun resetTimer() {
@@ -54,6 +70,13 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         uiState.update {
             it.copy(isRunning = false, currentTime = 0L)
         }
+
+        CrashlyticsHelper.logTimerAction(
+            action = TimerAction.RESET,
+            sessionMode = uiState.value.sessionMode,
+            isRunning = uiState.value.isRunning,
+            remainingTime = uiState.value.remainingTime
+        )
     }
 
     fun changeSession(mode: SessionMode) {
@@ -66,5 +89,12 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 sessionMode = mode
             )
         }
+
+        CrashlyticsHelper.logTimerAction(
+            action = TimerAction.SESSION_CHANGE,
+            sessionMode = uiState.value.sessionMode,
+            isRunning = uiState.value.isRunning,
+            remainingTime = uiState.value.remainingTime
+        )
     }
 }
