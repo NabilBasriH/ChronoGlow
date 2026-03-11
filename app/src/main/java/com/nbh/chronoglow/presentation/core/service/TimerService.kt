@@ -5,11 +5,18 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.core.app.NotificationCompat
 import com.nbh.chronoglow.MainActivity
 import com.nbh.chronoglow.R
 import com.nbh.chronoglow.domain.model.SessionMode
 import com.nbh.chronoglow.presentation.home.HomeUiState
+import com.nbh.chronoglow.presentation.utils.CrashlyticsHelper
 import com.nbh.chronoglow.presentation.utils.formatTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +74,8 @@ class TimerService : Service() {
                 timerState.update { it.copy(currentTime = it.currentTime + 1) }
                 updateNotification()
             }
+            triggerEndAlert()
+
             timerState.update { it.copy(isRunning = false, currentTime = 0L) }
             timerJob = null
             updateNotification()
@@ -151,6 +160,52 @@ class TimerService : Service() {
             Intent(this, TimerService::class.java).apply { this.action = action },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
+    }
+
+    private fun triggerEndAlert() {
+        val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+        val isStreamMuted = audioManager.isStreamMute(AudioManager.STREAM_MUSIC)
+
+        val volumePercent = if (maxVolume > 0) currentVolume.toFloat() / maxVolume else 0f
+
+        when {
+            isStreamMuted || currentVolume == 0 -> vibrate()
+            volumePercent < 0.3f -> {
+                playSound(); vibrate()
+            }
+
+            else -> playSound()
+        }
+    }
+
+    private fun playSound() {
+        try {
+            val mediaPlayer = MediaPlayer.create(applicationContext, R.raw.bell_ding_sound)
+            mediaPlayer.setOnCompletionListener { it.release() }
+            mediaPlayer.start()
+        } catch (e: Exception) {
+            CrashlyticsHelper.logSoundError(e)
+            vibrate()
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun vibrate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator.vibrate(
+                VibrationEffect.createWaveform(longArrayOf(0, 400, 200, 400), -1)
+            )
+        } else {
+            val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 400, 200, 400), -1))
+            } else {
+                vibrator.vibrate(longArrayOf(0, 400, 200, 400), -1)
+            }
+        }
     }
 
     override fun onDestroy() {

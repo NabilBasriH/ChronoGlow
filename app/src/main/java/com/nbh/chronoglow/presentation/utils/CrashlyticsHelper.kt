@@ -22,6 +22,13 @@ object CrashlyticsHelper {
             log("${action.name} | session=$sessionMode | running=$isRunning | remaining=$remainingTime")
         }
     }
+
+    fun logSoundError(e: Exception) {
+        Firebase.crashlytics.apply {
+            log("TimerService: playSound() failed, falling back to vibration")
+            recordException(e)
+        }
+    }
 }
 
 enum class TimerAction {
