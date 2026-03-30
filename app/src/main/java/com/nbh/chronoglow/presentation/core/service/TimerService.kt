@@ -8,6 +8,7 @@ import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
+import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -45,6 +46,8 @@ class TimerService : Service() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var timerJob: Job? = null
+    private var sessionStartElapsed = 0L
+    private var elapsedMsBeforePause = 0L
 
     override fun onBind(intent: Intent?) = null
 
@@ -65,24 +68,30 @@ class TimerService : Service() {
     private fun startTimer() {
         if (timerJob != null) return
 
+        sessionStartElapsed = SystemClock.elapsedRealtime()
         timerState.update { it.copy(isRunning = true) }
         startForeground(NOTIFICATION_ID, buildNotification())
 
         timerJob = serviceScope.launch {
-            while (timerState.value.runningNotFinished) {
-                delay(1000)
-                timerState.update { it.copy(currentTime = it.currentTime + 1) }
-                updateNotification()
-            }
-            triggerEndAlert()
+            val totalDurationMs = timerState.value.totalTime * 1000
 
-            timerState.update { it.copy(isRunning = false, currentTime = 0L) }
-            timerJob = null
-            updateNotification()
+            while (timerState.value.runningNotFinished) {
+                val elapsedMs =
+                    elapsedMsBeforePause + (SystemClock.elapsedRealtime() - sessionStartElapsed)
+                val remaining = totalDurationMs - elapsedMs
+                if (remaining <= 0) {
+                    handleTimerEnd()
+                    break
+                }
+                timerState.update { it.copy(currentTime = elapsedMs / 1000) }
+                updateNotification()
+                delay(500)
+            }
         }
     }
 
     private fun pauseTimer() {
+        elapsedMsBeforePause += SystemClock.elapsedRealtime() - sessionStartElapsed
         timerJob?.cancel()
         timerJob = null
         timerState.update { it.copy(isRunning = false) }
@@ -90,6 +99,7 @@ class TimerService : Service() {
     }
 
     private fun resetTimer() {
+        elapsedMsBeforePause = 0L
         timerJob?.cancel()
         timerJob = null
         timerState.update { it.copy(isRunning = false, currentTime = 0L) }
@@ -98,11 +108,21 @@ class TimerService : Service() {
     }
 
     private fun changeSession(mode: SessionMode) {
+        elapsedMsBeforePause = 0L
         timerJob?.cancel()
         timerJob = null
         timerState.update { it.copy(isRunning = false, currentTime = 0L, sessionMode = mode) }
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
+    }
+
+    private fun handleTimerEnd() {
+        timerJob?.cancel()
+        timerJob = null
+        elapsedMsBeforePause = 0L
+        triggerEndAlert()
+        timerState.update { it.copy(isRunning = false, currentTime = 0L) }
+        updateNotification()
     }
 
     private fun buildNotification(): Notification {
@@ -167,7 +187,6 @@ class TimerService : Service() {
         val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
         val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
         val isStreamMuted = audioManager.isStreamMute(AudioManager.STREAM_MUSIC)
-
         val volumePercent = if (maxVolume > 0) currentVolume.toFloat() / maxVolume else 0f
 
         when {

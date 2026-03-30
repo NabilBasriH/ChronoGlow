@@ -19,3 +19,18 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Crashlytics - stacktraces
+-keepattributes SourceFile, LineNumberTable
+-keep public class * extends java.lang.Exception
+
+# Domain models
+-keep class com.nbh.chronoglow.domain.model.** { *; }
+-keep class com.nbh.chronoglow.presentation.home.HomeUiState { *; }
+
+# Coroutines
+-keep class kotlinx.coroutines.** { *; }
+-dontwarn kotlinx.coroutines.**
+
+# Foreground Service
+-keep class com.nbh.chronoglow.presentation.core.service.TimerService { *; }
